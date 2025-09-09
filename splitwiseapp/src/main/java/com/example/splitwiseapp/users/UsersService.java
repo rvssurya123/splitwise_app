@@ -1,5 +1,7 @@
 package com.example.splitwiseapp.users;
 
+import com.example.splitwiseapp.UsersDTOs.UserCreationRequestDTO;
+import com.example.splitwiseapp.UsersDTOs.UserCreationResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,29 +17,35 @@ public class UsersService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // Service for new user creation
-    public int createUser(Users user){
-        String rawPassword = user.getPassword();
-        String encriptedPassword = passwordEncoder.encode(rawPassword);
-        user.setPassword(encriptedPassword);
+    // Logic in Service for new user creation
+    public UserCreationResponseDTO createUser(UserCreationRequestDTO requestDTO){
+        Users newUser = new Users();  //created user object
 
-        //Converting username and email into lowercare
-        String givenUserName = user.getUserName();
-        String lowerCaseUserName = givenUserName.toLowerCase();
-        user.setUserName(lowerCaseUserName);
+        String lowerCaseName = requestDTO.getUserName().toLowerCase();
+        newUser.setUserName(lowerCaseName);            // converted into lowercase
 
-        String givenEmail = user.getEmail();
-        String lowerCaseEmail = givenEmail.toLowerCase();
-        user.setEmail(lowerCaseEmail);
+        String lowerCaseMail = requestDTO.getEmail().toLowerCase();
+        newUser.setEmail(lowerCaseMail);                // converted into lowercase
 
-        Users savedUser = usersRepository.save(user);
-        return savedUser.getUserId();
+        String encriptedPassword = passwordEncoder.encode(requestDTO.getPassword());    // encripted password to save in DB
+
+        newUser.setPassword(encriptedPassword);
+
+        Users savedNewUser = usersRepository.save(newUser);   // saved into DB
+
+        UserCreationResponseDTO responseDTO = new UserCreationResponseDTO();  // assigned required response varibles to userCreationResponseDTO
+        responseDTO.setUserName(savedNewUser.getUserName());
+        responseDTO.setUserId(savedNewUser.getUserId());
+
+        return responseDTO;
     }
 
-    public void deleteUser(Integer id){
-        usersRepository.deleteById(id);
-    }
 
+
+    // Logic in Service for delete user
+    public void deleteUser(Integer id){usersRepository.deleteById(id);}
+
+    // Logic in Service for update user
     public int updateUserDetails(int id, Map<String, String> userFields){
         Users user = usersRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -61,6 +69,7 @@ public class UsersService {
         return user.getUserId();
     }
 
+    // Logic in Service for get user details by id
     public Users getUserDetailsById(int id){
         Users userDetails = usersRepository.findById(id).orElse(null);
         return userDetails;

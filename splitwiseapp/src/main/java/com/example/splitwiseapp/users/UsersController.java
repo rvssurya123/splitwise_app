@@ -1,5 +1,7 @@
 package com.example.splitwiseapp.users;
 
+import com.example.splitwiseapp.UsersDTOs.UserCreationRequestDTO;
+import com.example.splitwiseapp.UsersDTOs.UserCreationResponseDTO;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,19 +17,23 @@ public class UsersController {
     private UsersService usersService;
 
     // Post Mapping call to add users or Create users
+
     @PostMapping("/createuser")
-    public int createUser(@RequestBody Users user){
-        int id = usersService.createUser(user);
-        return id;
+    public ResponseEntity<UserCreationResponseDTO> createUser(@RequestBody UserCreationRequestDTO requestDTO){
+        UserCreationResponseDTO savedUser = usersService.createUser(requestDTO);
+        return ResponseEntity.ok(savedUser);
     }
 
     // Delete API for delete users
+
     @DeleteMapping("/deleteuser/{id}")
-    public void deleteUser(@PathVariable Integer id){
+    public String deleteUser(@PathVariable Integer id){
         usersService.deleteUser(id);
+        return "User Deleted";
     }
 
     // Patch for update users if they want to change(userName, email, password)
+
     @PatchMapping("/updateuserdetails/{id}")
     public void updateUserDetails(@PathVariable int id, @RequestBody Map<String, String> user){
         int updatedUser = usersService.updateUserDetails(id, user);
@@ -35,6 +41,7 @@ public class UsersController {
     }
 
     // Get details by userName
+
     @GetMapping("/getuserdetailsbyid/{id}")
     public ResponseEntity<Users> getUserDetailsById(@PathVariable int id){
         Users userDetails = usersService.getUserDetailsById(id);
