@@ -25,4 +25,6 @@ public class Users {
 
     @CreationTimestamp
     private Date createdAt;
+
+    private Date updatedAt;
 }
