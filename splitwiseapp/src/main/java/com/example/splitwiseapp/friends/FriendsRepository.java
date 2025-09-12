@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface FriendsRepository extends CrudRepository<Friends, Integer> {
 //    Optional<Users> findByEmail(String email);
+    Optional<Friends> findByUserIdAndFriendId(int userId, int friendId);
 }

@@ -16,12 +16,22 @@ public class FriendsService {
 
     public void addFriend(int id, Users users) {
 
-        int getFrienduserIdByEmail = Math.toIntExact(getUserIdByEmail(users.getEmail()));
+        int friendUserId = Math.toIntExact(getUserIdByEmail(users.getEmail()));
+
+        int userIdToSave = Math.min(id, friendUserId);
+        int friendIdToSave = Math.max(id, friendUserId);
 
         Friends savedFriend = new Friends();
-        savedFriend.setUserId(id);
-        savedFriend.setFriendId(getFrienduserIdByEmail);
+        savedFriend.setUserId(userIdToSave);
+        savedFriend.setFriendId(friendIdToSave);
         friendsRepository.save(savedFriend);
+
+//        int getFrienduserIdByEmail = Math.toIntExact(getUserIdByEmail(users.getEmail()));
+//
+//        Friends savedFriend = new Friends();
+//        savedFriend.setUserId(id);
+//        savedFriend.setFriendId(getFrienduserIdByEmail);
+//        friendsRepository.save(savedFriend);
     }
 
     public Long getUserIdByEmail(String email) {
@@ -29,5 +39,30 @@ public class FriendsService {
 
             return (long) userOptional.get().getUserId();
 
+    }
+
+    public void deleteFriend(int id, String email ) {
+
+        int friendUserId = Math.toIntExact(getUserIdByEmail(email));
+
+        int userIdToDelete = Math.min(id, friendUserId);
+        int friendIdToDelete = Math.max(id, friendUserId);
+
+        int friendListId = getFriendListId(userIdToDelete, friendIdToDelete);
+        friendsRepository.deleteById(friendListId);
+//        int ownersId = id;
+//        int friendId = Math.toIntExact(getUserIdByEmail(email));
+//        int friendListId = getFriendListId(ownersId, friendId);
+//        friendsRepository.deleteById(friendListId);
+
+    }
+
+    public int getFriendListId(int userId, int friendId) {
+        Optional<Friends> friendOpt = friendsRepository.findByUserIdAndFriendId(userId, friendId);
+        if (friendOpt.isPresent()) {
+            return friendOpt.get().getFriendListId();
+        } else {
+            throw new RuntimeException("Friend relationship not found");
+        }
     }
 }

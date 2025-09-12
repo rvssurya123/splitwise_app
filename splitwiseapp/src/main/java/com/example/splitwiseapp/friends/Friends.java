@@ -1,9 +1,6 @@
 package com.example.splitwiseapp.friends;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity(name = "friends")
@@ -12,6 +9,7 @@ public class Friends {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "friends_list_id")
     private int friendListId;
 
     private int userId;
