@@ -3,7 +3,8 @@ package com.example.splitwiseapp.friends;
 import jakarta.persistence.*;
 import lombok.Data;
 
-@Entity(name = "friends")
+@Entity
+@Table(name = "friends")
 @Data
 public class Friends {
 
