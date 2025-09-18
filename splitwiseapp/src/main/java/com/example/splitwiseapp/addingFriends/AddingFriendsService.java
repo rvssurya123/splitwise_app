@@ -28,37 +28,55 @@ public class AddingFriendsService {
     }
 
     public void addMembersIntoGroup(int groupId, int userId, String mail) {
+        //Group admin validation
         if(!userIsExist(userId)){
             throw new UserNotFoundException("UserId does not exist");
         }
+        //Group member validation
         Optional<Users> optionalUsers = usersRepository.findByEmail(mail);
         int groupMember = optionalUsers.get().getUserId();
         if(optionalUsers.isEmpty() ||!userIsExist(optionalUsers.get().getUserId())){
             throw new UserNotFoundException("who is added does not exist");
         }
+        //Group validation
         if (!groupsRepository.existsById(groupId)){
             throw new UserNotFoundException("groupId does not exist");
         }
+        //is group admin and member friends?
         if(!bothAreFriendsOrNot(userId, groupMember)){
             throw new UserNotFoundException("make them friend");
         }
 
-        AddingFriendsKey key = new AddingFriendsKey();
-        key.setGroupId(groupId);
-        key.setUserId(optionalUsers.get().getUserId());
-
+        //After all validations adding group member into group
         AddingFriends addingFriends = new AddingFriends();
-        addingFriends.setId(key);
+        addingFriends.setGroupId(groupId);
         addingFriends.setAddedBy(userId);
+        addingFriends.setUserId(groupMember);
 
         addingFriendsRepository.save(addingFriends);
 
-
     }
 
-    public void deleteMemberFromGroup(int groupId, int userId, String mail){
-        
+    public void deleteMemberFromGroup(int groupId, int addedBy, String email) {
+        Optional<Users> optionalUsers = usersRepository.findByEmail(email);
+        if (optionalUsers.isEmpty()) {
+            throw new UserNotFoundException("User not found for email: " + email);
+        }
+
+        int groupMember = optionalUsers.get().getUserId();
+        int groupMemberCommonId = getGroupMemberCommonId(groupMember, groupId, addedBy);
+        addingFriendsRepository.deleteById(groupMemberCommonId);
     }
+
+
+
+    public int getGroupMemberCommonId(int userId, int groupId, int addedBy) {
+        return addingFriendsRepository.findByUserIdAndGroupIdAndAddedBy(userId, groupId, addedBy)
+                .orElseThrow(() -> new RuntimeException("Group member not found"))
+                .getGroupMemberCommonId();
+    }
+
+
 
 
 
