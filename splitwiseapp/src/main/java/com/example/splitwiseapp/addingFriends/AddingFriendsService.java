@@ -1,7 +1,6 @@
 package com.example.splitwiseapp.addingFriends;
 
 import com.example.splitwiseapp.exceptionMessage.UserNotFoundException;
-import com.example.splitwiseapp.friends.Friends;
 import com.example.splitwiseapp.friends.FriendsRepository;
 import com.example.splitwiseapp.groups.GroupsRepository;
 import com.example.splitwiseapp.users.Users;
