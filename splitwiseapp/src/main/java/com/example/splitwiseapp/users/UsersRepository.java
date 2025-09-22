@@ -10,4 +10,5 @@ public interface UsersRepository extends CrudRepository<Users, Integer> {
 
 
     Optional<Users> findByEmail(String email);
+    Users findFirstByEmail(String email);
 }

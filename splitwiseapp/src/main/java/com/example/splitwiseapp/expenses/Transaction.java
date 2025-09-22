@@ -16,7 +16,10 @@ public class Transaction {
     private int transactionId;
     private int groupId;  //Where to add
     private int addedBy; // who is adding
-    private int paidBy; //who is paid
+    @Column(name = "paid_by")
+    private int paidById; //who is paid id
+    @Transient
+    private String emailOfPaidBy;  //who is paid mail
     private String message; //description paid for
     private BigDecimal amount;
     private String splitType;  // Type of split mean is it percentage type or amount or
