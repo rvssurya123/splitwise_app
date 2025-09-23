@@ -14,6 +14,7 @@ public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int transactionId;
+    @Column(name = "group_id")
     private int groupId;  //Where to add
     private int addedBy; // who is adding
     @Column(name = "paid_by")
