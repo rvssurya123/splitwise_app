@@ -1,8 +1,11 @@
 package com.example.splitwiseapp.addingFriends;
 
+import com.example.splitwiseapp.groups.Groups;
 import com.example.splitwiseapp.groups.GroupsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class AddingFriendsController {
@@ -25,5 +28,11 @@ public class AddingFriendsController {
     public String deleteMemberFromGroup(@PathVariable int groupId, @PathVariable int userId, @RequestBody String email){
         addingFriendsService.deleteMemberFromGroup(groupId, userId, email);
         return "Done";
+    }
+
+    // To get all the groups from userId
+    @GetMapping("/users/groups/{userId}")
+    public List<Groups> getAllGroupsByUserId(@PathVariable int userId){
+        return addingFriendsService.getAllGroupsByUserId(userId);
     }
 }

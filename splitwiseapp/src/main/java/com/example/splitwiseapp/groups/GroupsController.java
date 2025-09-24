@@ -3,6 +3,9 @@ package com.example.splitwiseapp.groups;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 public class GroupsController {
 
@@ -27,11 +30,4 @@ public class GroupsController {
         groupsService.updateGroupDetails(id, groupName);
         return "GROUP NAME UPDATED";
     }
-
-//    @PostMapping("/addmembersintogroup/{id}")
-//    public String addMembersIntoGroup(@PathVariable int groupId, int userId, @RequestBody String mail){
-//        groupsService.addMembersIntoGroup(groupId, userId, mail);
-//        return "Member Added";
-//    }
-
 }

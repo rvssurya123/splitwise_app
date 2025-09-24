@@ -2,12 +2,14 @@ package com.example.splitwiseapp.addingFriends;
 
 import com.example.splitwiseapp.exceptionMessage.UserNotFoundException;
 import com.example.splitwiseapp.friends.FriendsRepository;
+import com.example.splitwiseapp.groups.Groups;
 import com.example.splitwiseapp.groups.GroupsRepository;
 import com.example.splitwiseapp.users.Users;
 import com.example.splitwiseapp.users.UsersRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class AddingFriendsService {
@@ -85,5 +87,19 @@ public class AddingFriendsService {
 
     public boolean bothAreFriendsOrNot(int userId, int groupMember){
         return friendsRepository.existsFriendshipBetween(userId, groupMember);
+    }
+
+    public List<Groups> getAllGroupsByUserId(int userId) {
+        List<AddingFriends> members = addingFriendsRepository.findAllByUserId(userId);
+
+        Set<Integer> groupIds = members.stream()
+                .map(AddingFriends::getGroupId)
+                .collect(Collectors.toSet());
+
+        // Fetch groups using groupsRepository
+        return groupIds.stream()
+                .map(groupId -> groupsRepository.findById(groupId).orElse(null))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 }
