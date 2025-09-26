@@ -1,10 +1,12 @@
-package com.example.splitwiseapp.expenses;
+package com.example.splitwiseapp.transactions;
 
+import com.example.splitwiseapp.expenses.Split;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "transaction_table")
@@ -28,4 +30,10 @@ public class Transaction {
     @Column(name = "created_at")
     private Date createdAt;
     private int numberOfParticipantsSplit;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "transaction_id", referencedColumnName = "transactionId")
+    private List<Split> split;
+
+
 }

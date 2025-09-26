@@ -1,4 +1,4 @@
-package com.example.splitwiseapp.expenses;
+package com.example.splitwiseapp.transactions;
 
 import org.springframework.data.repository.CrudRepository;
 

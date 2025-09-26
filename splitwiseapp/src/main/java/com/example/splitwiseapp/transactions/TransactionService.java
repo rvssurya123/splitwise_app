@@ -1,5 +1,7 @@
-package com.example.splitwiseapp.expenses;
+package com.example.splitwiseapp.transactions;
 
+import com.example.splitwiseapp.expenses.Split;
+import com.example.splitwiseapp.expenses.SplitRepository;
 import com.example.splitwiseapp.groups.GroupsRepository;
 import com.example.splitwiseapp.users.Users;
 import com.example.splitwiseapp.users.UsersRepository;
@@ -7,6 +9,8 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +23,8 @@ public class TransactionService {
     private GroupsRepository groupsRepository;
     @Autowired
     private UsersRepository usersRepository;
+    @Autowired
+    private SplitRepository splitRepository;
 
     //
     public void addTransaction(int groupId, int addingBy, Transaction transaction) {
@@ -37,7 +43,20 @@ public class TransactionService {
         else{
             newTrans.setPaidById(paidById);
         }
-        transactionRepository.save(newTrans);
+
+        List<Split> splitAmount = new ArrayList<>();
+        splitAmount = transaction.getSplit();
+
+        List<Split> updatedSplitList = new ArrayList<>();
+        updatedSplitList =  splitAndAddAmount(splitAmount, transaction.getAmount(), paidById);
+        //saved the transation and we will get transactionId;
+        Transaction savedTransaction = transactionRepository.save(newTrans);
+
+        for(Split eachSplit : updatedSplitList){
+            eachSplit.setTransaction(savedTransaction);
+            splitRepository.save(eachSplit);
+        }
+
         }
 
     private int getIdByMail(String paidBy) {
@@ -46,10 +65,39 @@ public class TransactionService {
         return id;
     }
 
+    // method for split process
+    public List<Split> splitAndAddAmount(List<Split> splitList, BigDecimal amount, int paidBy) {
+        List<Split> newSplitList = new ArrayList<>();
+        for(Split eachSplit : splitList){
+
+            eachSplit.setOwedToUserId(paidBy);
+
+            int userId = getIdByMail(eachSplit.getUserMail());
+            eachSplit.setUserId(userId);
+
+            BigDecimal sharedAmount = mathCalculation(eachSplit.getSharePercentage(), amount);
+
+            if (userId == paidBy){ eachSplit.setAmountPaid(amount.subtract(sharedAmount));}
+            else {eachSplit.setAmountOwed(sharedAmount);}
+            newSplitList.add(eachSplit);
+        }
+        return newSplitList;
+    }
+
+    // math calculation that who need to pay to whom and how much
+    public BigDecimal mathCalculation(BigDecimal percentage, BigDecimal amount){
+        BigDecimal sharedAmount = amount
+                .multiply(percentage)
+                .divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP);
+        return sharedAmount;
+    }
+
+    //
     public void deleteTransaction(int transactionId) {
         transactionRepository.deleteById(transactionId);
     }
 
+    //
     public boolean updateTransactionDetails(int groupId, int adminId, Transaction transaction) {
             Transaction existingTransaction = transactionRepository.findById(transaction.getTransactionId())
                     .orElseThrow(() -> new EntityNotFoundException("Transaction not found"));
