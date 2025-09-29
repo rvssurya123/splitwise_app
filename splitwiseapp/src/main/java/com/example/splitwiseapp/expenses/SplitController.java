@@ -13,10 +13,4 @@ public class SplitController {
     @Autowired
     private SplitService splitService;
 
-//    @PostMapping("/users/groups/transaction/split/{transactionId}")
-//    public List<Split> splitAndAddAmount(@PathVariable int transactionId, @RequestBody Split split){
-//        List<Split> splitList = splitService.splitAndAddAmount(transactionId, split);
-//        return splitList;
-//    }
-
 }

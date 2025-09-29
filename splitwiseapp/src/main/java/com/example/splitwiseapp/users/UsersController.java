@@ -1,11 +1,10 @@
 package com.example.splitwiseapp.users;
 
-import com.example.splitwiseapp.UsersDTOs.UserCreationRequestDTO;
-import com.example.splitwiseapp.UsersDTOs.UserCreationResponseDTO;
-import org.apache.catalina.User;
+import com.example.splitwiseapp.usersDTOs.UpdateUserDetailsRequestDTO;
+import com.example.splitwiseapp.usersDTOs.UserCreationRequestDTO;
+import com.example.splitwiseapp.usersDTOs.UserCreationResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -17,7 +16,8 @@ public class UsersController {
     private UsersService usersService;
 
     // Post Mapping call to add users or Create users
-
+    //Inputs : UserName, eMail, Password
+    // Output : UserName and UserId
     @PostMapping("/createuser")
     public ResponseEntity<UserCreationResponseDTO> createUser(@RequestBody UserCreationRequestDTO requestDTO){
         UserCreationResponseDTO savedUser = usersService.createUser(requestDTO);
@@ -25,7 +25,7 @@ public class UsersController {
     }
 
     // Delete API for delete users
-
+    // Input userId through path variable
     @DeleteMapping("/deleteuser/{id}")
     public String deleteUser(@PathVariable Integer id){
         usersService.deleteUser(id);
@@ -33,15 +33,14 @@ public class UsersController {
     }
 
     // Patch for update users if they want to change(userName, email, password)
-
+    // Inputs : userName, eMail, password (required fields to change)
     @PatchMapping("/updateuserdetails/{id}")
-    public void updateUserDetails(@PathVariable int id, @RequestBody Map<String, String> user){
-        int updatedUser = usersService.updateUserDetails(id, user);
-
+    public void updateUserDetails(@PathVariable int id, @RequestBody UpdateUserDetailsRequestDTO updateUserDetailsRequestDTO){
+        usersService.updateUserDetails(id, updateUserDetailsRequestDTO);
     }
 
     // Get details by userName
-
+    // Input: userId through path variable
     @GetMapping("/getuserdetailsbyid/{id}")
     public ResponseEntity<Users> getUserDetailsById(@PathVariable int id){
         Users userDetails = usersService.getUserDetailsById(id);

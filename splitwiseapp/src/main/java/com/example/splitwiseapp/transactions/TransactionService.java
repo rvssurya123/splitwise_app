@@ -37,6 +37,7 @@ public class TransactionService {
         newTrans.setNumberOfParticipantsSplit(transaction.getNumberOfParticipantsSplit());
 
         int paidById = getIdByMail(transaction.getEmailOfPaidBy());
+        System.out.println(paidById);
         if(paidById == 0){
             newTrans.setPaidById(addingBy);
         }
@@ -62,26 +63,37 @@ public class TransactionService {
     private int getIdByMail(String paidBy) {
         Users optionalUser = usersRepository.findFirstByEmail(paidBy);
         int id = optionalUser.getUserId();
+        System.out.println(id);
         return id;
     }
 
     // method for split process
     public List<Split> splitAndAddAmount(List<Split> splitList, BigDecimal amount, int paidBy) {
         List<Split> newSplitList = new ArrayList<>();
+        BigDecimal sumOfPercentage = BigDecimal.ZERO;
         for(Split eachSplit : splitList){
-
             eachSplit.setOwedToUserId(paidBy);
 
             int userId = getIdByMail(eachSplit.getUserMail());
             eachSplit.setUserId(userId);
 
+            sumOfPercentage = sumOfPercentage.add(eachSplit.getSharePercentage());
+
             BigDecimal sharedAmount = mathCalculation(eachSplit.getSharePercentage(), amount);
 
-            if (userId == paidBy){ eachSplit.setAmountPaid(amount.subtract(sharedAmount));}
-            else {eachSplit.setAmountOwed(sharedAmount);}
+            if (userId == paidBy){ eachSplit.setAmountPaid(amount.subtract(sharedAmount));
+            } else {
+                eachSplit.setAmountOwed(sharedAmount);
+            }
             newSplitList.add(eachSplit);
         }
-        return newSplitList;
+        if (sumOfPercentage.compareTo(new BigDecimal("100")) == 0){
+            return newSplitList;
+        }
+        else {
+            throw new IllegalArgumentException("Sum of share percentages must be 100, but was " + sumOfPercentage);
+        }
+
     }
 
     // math calculation that who need to pay to whom and how much

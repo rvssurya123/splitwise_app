@@ -15,23 +15,15 @@ public class FriendsService {
     private FriendsRepository friendsRepository;
 
     public void addFriend(int id, Users users) {
-
         int friendUserId = Math.toIntExact(getUserIdByEmail(users.getEmail()));
-
         int userIdToSave = Math.min(id, friendUserId);
         int friendIdToSave = Math.max(id, friendUserId);
 
         Friends savedFriend = new Friends();
         savedFriend.setUserId(userIdToSave);
         savedFriend.setFriendId(friendIdToSave);
-        friendsRepository.save(savedFriend);
 
-//        int getFrienduserIdByEmail = Math.toIntExact(getUserIdByEmail(users.getEmail()));
-//
-//        Friends savedFriend = new Friends();
-//        savedFriend.setUserId(id);
-//        savedFriend.setFriendId(getFrienduserIdByEmail);
-//        friendsRepository.save(savedFriend);
+        friendsRepository.save(savedFriend);
     }
 
     public Long getUserIdByEmail(String email) {

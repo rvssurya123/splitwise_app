@@ -1,7 +1,8 @@
 package com.example.splitwiseapp.users;
 
-import com.example.splitwiseapp.UsersDTOs.UserCreationRequestDTO;
-import com.example.splitwiseapp.UsersDTOs.UserCreationResponseDTO;
+import com.example.splitwiseapp.usersDTOs.UpdateUserDetailsRequestDTO;
+import com.example.splitwiseapp.usersDTOs.UserCreationRequestDTO;
+import com.example.splitwiseapp.usersDTOs.UserCreationResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,15 +22,9 @@ public class UsersService {
     public UserCreationResponseDTO createUser(UserCreationRequestDTO requestDTO){
         Users newUser = new Users();  //created user object
 
-        String lowerCaseName = requestDTO.getUserName().toLowerCase();
-        newUser.setUserName(lowerCaseName);            // converted into lowercase
-
-        String lowerCaseMail = requestDTO.getEmail().toLowerCase();
-        newUser.setEmail(lowerCaseMail);                // converted into lowercase
-
-        String encriptedPassword = passwordEncoder.encode(requestDTO.getPassword());    // encripted password to save in DB
-
-        newUser.setPassword(encriptedPassword);
+        newUser.setUserName(requestDTO.getUserName().toLowerCase());            // converted into lowercase
+        newUser.setEmail(requestDTO.getEmail().toLowerCase());                // converted into lowercase
+        newUser.setPassword(passwordEncoder.encode(requestDTO.getPassword()));     // encripted password to save in DB
 
         Users savedNewUser = usersRepository.save(newUser);   // saved into DB
 
@@ -40,33 +35,20 @@ public class UsersService {
         return responseDTO;
     }
 
-
-
     // Logic in Service for delete user
     public void deleteUser(Integer id){usersRepository.deleteById(id);}
 
     // Logic in Service for update user
-    public int updateUserDetails(int id, Map<String, String> userFields){
+    public void updateUserDetails(int id, UpdateUserDetailsRequestDTO updateUserDetailsRequestDTO
+    ){
         Users user = usersRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
 
-        // loops for the assign new updates
-        for(Map.Entry<String, String> entry : userFields.entrySet()){
-            String field = entry.getKey();
-            String value = entry.getValue();
+        user.setUserName(updateUserDetailsRequestDTO.getUserName().toLowerCase());
+        user.setEmail(updateUserDetailsRequestDTO.getEmail().toLowerCase());
+        String encriptedPassword = passwordEncoder.encode(updateUserDetailsRequestDTO.getPassword());
+        user.setPassword(encriptedPassword);
 
-            if("userName".equals(field)){
-                String lowerCaseValue = value.toLowerCase();
-                user.setUserName(lowerCaseValue);
-            } else if ("email".equals(field)) {
-                String lowerCaseValue = value.toLowerCase();
-                user.setEmail(lowerCaseValue);
-            } else if ("password".equals(field)) {
-                String encriptedPassword = passwordEncoder.encode(value);
-                user.setPassword(encriptedPassword);
-            }
-        }
         usersRepository.save(user);
-        return user.getUserId();
     }
 
     // Logic in Service for get user details by id
@@ -74,5 +56,4 @@ public class UsersService {
         Users userDetails = usersRepository.findById(id).orElse(null);
         return userDetails;
     }
-
 }

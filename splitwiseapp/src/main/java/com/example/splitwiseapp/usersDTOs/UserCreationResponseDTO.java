@@ -1,4 +1,4 @@
-package com.example.splitwiseapp.UsersDTOs;
+package com.example.splitwiseapp.usersDTOs;
 
 import lombok.Data;
 

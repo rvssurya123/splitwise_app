@@ -9,5 +9,4 @@ import java.util.List;
 public class SplitService {
     @Autowired
     private SplitRepository splitRepository;
-
 }

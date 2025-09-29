@@ -11,20 +11,14 @@ import java.util.Date;
 
 @Entity(name = "users_table")
 @Data
-
 public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
-
     private String userName;
-
     private String email;
-
     private String password;
-
     @CreationTimestamp
     private Date createdAt;
-
     private Date updatedAt;
 }

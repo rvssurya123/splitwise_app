@@ -1,6 +1,5 @@
-package com.example.splitwiseapp.UsersDTOs;
+package com.example.splitwiseapp.usersDTOs;
 
-import jakarta.persistence.Entity;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
