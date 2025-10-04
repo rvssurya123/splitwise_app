@@ -16,10 +16,10 @@ public class Split {
     @Transient
     private String userMail;
     private int userId;
+    private int groupId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "transaction_id")
     private Transaction transaction;
-
     private int owedToUserId;
     private BigDecimal sharePercentage;
     private BigDecimal amountOwed;

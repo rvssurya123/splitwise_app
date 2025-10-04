@@ -1,5 +1,6 @@
 package com.example.splitwiseapp.transactions;
 
+import com.example.splitwiseapp.addingFriends.AddingFriendsRepository;
 import com.example.splitwiseapp.expenses.Split;
 import com.example.splitwiseapp.expenses.SplitRepository;
 import com.example.splitwiseapp.groups.GroupsRepository;
@@ -25,6 +26,8 @@ public class TransactionService {
     private UsersRepository usersRepository;
     @Autowired
     private SplitRepository splitRepository;
+    @Autowired
+    private AddingFriendsRepository addingFriendsRepository;
 
     //
     public void addTransaction(int groupId, int addingBy, Transaction transaction) {
@@ -49,7 +52,7 @@ public class TransactionService {
         splitAmount = transaction.getSplit();
 
         List<Split> updatedSplitList = new ArrayList<>();
-        updatedSplitList =  splitAndAddAmount(splitAmount, transaction.getAmount(), paidById);
+        updatedSplitList =  splitAndAddAmount(splitAmount, transaction.getAmount(), paidById, groupId);
         //saved the transation and we will get transactionId;
         Transaction savedTransaction = transactionRepository.save(newTrans);
 
@@ -57,24 +60,29 @@ public class TransactionService {
             eachSplit.setTransaction(savedTransaction);
             splitRepository.save(eachSplit);
         }
+    }
 
-        }
-
-    private int getIdByMail(String paidBy) {
-        Users optionalUser = usersRepository.findFirstByEmail(paidBy);
+    private int getIdByMail(String eMail) {
+        Users optionalUser = usersRepository.findFirstByEmail(eMail);
         int id = optionalUser.getUserId();
         System.out.println(id);
         return id;
     }
 
     // method for split process
-    public List<Split> splitAndAddAmount(List<Split> splitList, BigDecimal amount, int paidBy) {
+    public List<Split> splitAndAddAmount(List<Split> splitList, BigDecimal amount, int paidBy, int groupId) {
         List<Split> newSplitList = new ArrayList<>();
         BigDecimal sumOfPercentage = BigDecimal.ZERO;
         for(Split eachSplit : splitList){
             eachSplit.setOwedToUserId(paidBy);
 
             int userId = getIdByMail(eachSplit.getUserMail());
+
+            // Vaidation Is user exist in group or not
+            boolean memberExists = addingFriendsRepository.existsByGroupIdAndUserId(groupId, userId);
+            if (!memberExists) {
+                throw new IllegalArgumentException("User is not a member of the group " + eachSplit.getUserMail());
+            }
             eachSplit.setUserId(userId);
 
             sumOfPercentage = sumOfPercentage.add(eachSplit.getSharePercentage());

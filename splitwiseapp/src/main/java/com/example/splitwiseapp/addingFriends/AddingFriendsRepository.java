@@ -11,4 +11,5 @@ public interface AddingFriendsRepository extends JpaRepository<AddingFriends, In
     Optional<AddingFriends> findByUserIdAndGroupIdAndAddedBy(int userId, int groupId, int addedBy);
     List<AddingFriends> findAllByUserId(int userId);
 
+    boolean existsByGroupIdAndUserId(int groupId, int userId);
 }
