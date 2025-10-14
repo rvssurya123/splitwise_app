@@ -6,12 +6,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class TotalAmountEachGroupController {
+public class TotalAmountController {
     @Autowired
-    private TotalAmountEachGroupService totalAmountEachGroupService;
+    private TotalAmountService totalAmountEachGroupService;
 
+    // Get total owe or owed for group
     @GetMapping("/users/groups/{groupId}/{userId}")
-    public TotalAmountEachGroup totalAmountEachGroup(@PathVariable int userId, @PathVariable int groupId){
+    public TotalAmount totalAmountEachGroup(@PathVariable int userId, @PathVariable int groupId){
         return totalAmountEachGroupService.totalAmountEachGroup(groupId, userId );
+    }
+
+    // Get total owe or owed for user
+    @GetMapping("/users/{userId}")
+    public TotalAmount totalAmountAllGroup(@PathVariable int userId){
+        return totalAmountEachGroupService.totalAmountAllGroups(userId);
     }
 }

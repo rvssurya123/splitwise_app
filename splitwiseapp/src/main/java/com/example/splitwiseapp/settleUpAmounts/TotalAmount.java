@@ -5,7 +5,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-public class TotalAmountEachGroup {
+public class TotalAmount {
     private BigDecimal totalOwe;
     private BigDecimal totalOwed;
 }
