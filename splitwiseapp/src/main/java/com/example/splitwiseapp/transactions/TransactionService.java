@@ -75,6 +75,7 @@ public class TransactionService {
         BigDecimal sumOfPercentage = BigDecimal.ZERO;
         for(Split eachSplit : splitList){
             eachSplit.setOwedToUserId(paidBy);
+            eachSplit.setGroupId(groupId);
 
             int userId = getIdByMail(eachSplit.getUserMail());
 
