@@ -53,7 +53,7 @@ public class TransactionService {
 
         List<Split> updatedSplitList = new ArrayList<>();
         updatedSplitList =  splitAndAddAmount(splitAmount, transaction.getAmount(), paidById, groupId);
-        //saved the transation and we will get transactionId;
+        //saved the transaction and we will get transactionId;
         Transaction savedTransaction = transactionRepository.save(newTrans);
 
         for(Split eachSplit : updatedSplitList){
@@ -79,7 +79,7 @@ public class TransactionService {
 
             int userId = getIdByMail(eachSplit.getUserMail());
 
-            // Vaidation Is user exist in group or not
+            // Validation Is user exist in group or not
             boolean memberExists = addingFriendsRepository.existsByGroupIdAndUserId(groupId, userId);
             if (!memberExists) {
                 throw new IllegalArgumentException("User is not a member of the group " + eachSplit.getUserMail());
