@@ -31,6 +31,7 @@ public class AddingFriendsController {
     }
 
     // To get all the groups from userId
+    @CrossOrigin(origins = "http://localhost:3002")
     @GetMapping("/users/groups/{userId}")
     public List<Groups> getAllGroupsByUserId(@PathVariable int userId){
         return addingFriendsService.getAllGroupsByUserId(userId);
