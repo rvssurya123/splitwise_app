@@ -87,6 +87,7 @@ function App() {
     <div style={{ padding: 20 }}>
       <h1>Splitwise Clone</h1>
       <h2>Groups</h2>
+
       <h2>Profile <UserDetails /> </h2>
 
       <ul>

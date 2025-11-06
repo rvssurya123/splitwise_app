@@ -3,12 +3,20 @@ package com.example.splitwiseapp.transactions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
+@Tag(
+        name = "💰 Transaction Management",
+        description = "Handles adding, updating, deleting, and retrieving transactions within groups."
+)
+
 public class TransactionController {
     @Autowired
     private TransactionService transactionService;
