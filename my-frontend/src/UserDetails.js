@@ -1,16 +1,11 @@
 import React, { useState } from "react";
 
 function GroupDetails() {
-  const [userId, setUserId] = useState("");
+  const [userId, setUserId] = useState("33");   // default id 33
   const [groups, setGroups] = useState([]);
   const [error, setError] = useState(null);
 
   const fetchGroupDetails = () => {
-    if (!userId) {
-      setError("Please enter a user ID");
-      setGroups([]);
-      return;
-    }
     fetch(`http://localhost:8080/users/groups/${userId}`)
       .then((res) => {
         if (!res.ok) {

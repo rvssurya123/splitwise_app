@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
+@RequestMapping("/splitwise")
 public class AddingFriendsController {
     @Autowired
     private GroupsService groupsService;
@@ -31,7 +33,7 @@ public class AddingFriendsController {
     }
 
     // To get all the groups from userId
-    @CrossOrigin(origins = "http://localhost:3002")
+    //@CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/users/groups/{userId}")
     public List<Groups> getAllGroupsByUserId(@PathVariable int userId){
         return addingFriendsService.getAllGroupsByUserId(userId);

@@ -28,6 +28,8 @@
 
 import React, { useEffect, useState } from "react";
 import UserDetails from "./UserDetails";
+import UserProfile from "./UserProfile";
+
 
 const API_BASE = "http://localhost:8080/api";
 
@@ -85,6 +87,7 @@ function App() {
   return (
 
     <div style={{ padding: 20 }}>
+      <UserProfile />
       <h1>Splitwise Clone</h1>
       <h2>Groups</h2>
 

@@ -12,6 +12,7 @@ public class Groups {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int groupId;
+
     private String groupName;
     private int groupCreatedBy;
     @CreationTimestamp

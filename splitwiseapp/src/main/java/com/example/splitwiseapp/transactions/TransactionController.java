@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/splitwise")
 @Tag(
         name = "💰 Transaction Management",
         description = "Handles adding, updating, deleting, and retrieving transactions within groups."
