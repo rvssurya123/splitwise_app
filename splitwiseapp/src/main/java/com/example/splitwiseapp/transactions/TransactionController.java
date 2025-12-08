@@ -14,7 +14,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/splitwise")
 @Tag(
-        name = "💰 Transaction Management",
+        name = "Transaction Management",
         description = "Handles adding, updating, deleting, and retrieving transactions within groups."
 )
 
@@ -22,15 +22,15 @@ public class TransactionController {
     @Autowired
     private TransactionService transactionService;
 
+    // to get all the transactions from a particular group
+    @GetMapping("/transactions/group/{groupId}")
+    public List<Transaction> getTransactionsByGroup(@PathVariable int groupId) {
+        return transactionService.getAllTransactionsByGroup(groupId);
+    }
+
     // add expenses into group
     //Inputs path variables:- userId: addingBy, groupId: who is adding,
     //Json:- mail: who is paying, msg : , amount, splitType,
-//    @PostMapping ("/users/group/transaction/{groupId}/{addingBy}")
-//    public String addTransaction(@PathVariable int groupId, @PathVariable int addingBy, @RequestBody Transaction transaction){
-//        transactionService.addTransaction(groupId, addingBy, transaction);
-//        return "TransactionAdded";
-//    }
-
     @PostMapping("/users/group/transaction/{groupId}/{addingBy}")
     public ResponseEntity<?> addTransaction(@PathVariable int groupId, @PathVariable int addingBy, @RequestBody Transaction transaction){
         try {
@@ -43,16 +43,6 @@ public class TransactionController {
         }
     }
 
-
-    // Delete expenses or Transaction
-    //Inputs PathVaribles: userid: who is logged in and trying to delete, groupId
-    //Json: transaction id
-    @DeleteMapping("/users/group/transaction/{groupId}/{adminId}")
-    public String deleteTransaction(@PathVariable int groupId, @PathVariable int adminId, @RequestBody Transaction transaction){
-        transactionService.deleteTransaction(transaction.getTransactionId());
-        return "Deleted";
-    }
-
     //Update Transaction
     //Input : PathVariables: userid: who is logged in and trying to update, groupId
     //json : transaction id and all the transaction details need to update
@@ -62,10 +52,13 @@ public class TransactionController {
         return value;
     }
 
-    // to get all the transactions from a particular group
-    @GetMapping("/transactions/group/{groupId}")
-    public List<Transaction> getTransactionsByGroup(@PathVariable int groupId) {
-        return transactionService.getAllTransactionsByGroup(groupId);
+    // Delete expenses or Transaction
+    //Inputs PathVaribles: userid: who is logged in and trying to delete, groupId
+    //Json: transaction id
+    @DeleteMapping("/users/group/transaction/{groupId}/{adminId}")
+    public String deleteTransaction(@PathVariable int groupId, @PathVariable int adminId, @RequestBody Transaction transaction){
+        transactionService.deleteTransaction(transaction.getTransactionId());
+        return "Deleted";
     }
 
 }
